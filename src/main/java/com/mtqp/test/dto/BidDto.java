@@ -3,21 +3,22 @@ package com.mtqp.test.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Base64;
+import java.util.Objects;
 
 public class BidDto {
 
 	private final Long id;
-	private final Long ts;
-	private final String ty;
-	private final String pl;
+	private final Long timestamp;
+	private final String type;
+	private final String payload;
 
 	@JsonCreator
-	public BidDto(@JsonProperty("id") Long id, @JsonProperty("ts") Long ts, @JsonProperty("ty") String ty, @JsonProperty("pl") String pl) {
+	public BidDto(@JsonProperty("id") Long id, @JsonProperty("ts") Long timestamp, @JsonProperty("ty") String type, @JsonProperty("pl") String payload) {
 
 		this.id = id;
-		this.ts = ts;
-		this.ty = ty;
-		this.pl = pl;
+		this.timestamp = timestamp;
+		this.type = type;
+		this.payload = payload;
 	}
 
 	public Long getId() {
@@ -25,25 +26,42 @@ public class BidDto {
 		return id;
 	}
 
-	public Long getTs() {
+	public Long getTimestamp() {
 
-		return ts;
+		return timestamp;
 	}
 
-	public String getTy() {
+	public String getType() {
 
-		return ty;
+		return type;
 	}
 
-	public String getPl() {
+	public String getPayload() {
 
-		return pl;
+		return payload;
 	}
 
 	@Override
 	public String toString() {
 
-		String decodedPl = new String(Base64.getDecoder().decode(pl));
-		return "BidDto{" + "id=" + id + ", ts=" + ts + ", ty='" + ty + ", pl='" + decodedPl + '}';
+		String decodedPl = new String(Base64.getDecoder().decode(payload));
+		return "{id=" + id + ", ts=" + timestamp + ", ty='" + type + ", pl='" + decodedPl + '}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+
+		if (this == o)
+			return true;
+		if (!(o instanceof BidDto))
+			return false;
+		BidDto bidDto = (BidDto) o;
+		return id.equals(bidDto.id) && timestamp.equals(bidDto.timestamp) && type.equals(bidDto.type) && payload.equals(bidDto.payload);
+	}
+
+	@Override
+	public int hashCode() {
+
+		return Objects.hash(id, timestamp, type, payload);
 	}
 }
