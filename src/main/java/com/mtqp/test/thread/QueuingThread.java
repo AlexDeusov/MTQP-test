@@ -5,16 +5,15 @@ import com.mtqp.test.utils.BidUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class QueuingThread implements Runnable {
+public class QueuingThread extends Thread {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueuingThread.class);
-	private static final Map<String, Queue<BidDto>> QUEUE_MAP = new HashMap<>();
+	private static final Map<String, Queue<BidDto>> QUEUE_MAP = Collections.synchronizedMap(new HashMap<>());
 
 	@Override
 	public void run() {
@@ -24,12 +23,7 @@ public class QueuingThread implements Runnable {
 		}
 	}
 
-	public synchronized boolean containsBids() {
-
-		return !QUEUE_MAP.isEmpty();
-	}
-
-	public synchronized void addBid(BidDto dto, String type) {
+	public void addBid(BidDto dto, String type) {
 
 		if (!QUEUE_MAP.containsKey(type)) {
 			QUEUE_MAP.put(type, new LinkedList<>());
