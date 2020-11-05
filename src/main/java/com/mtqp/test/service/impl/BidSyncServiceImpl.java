@@ -1,7 +1,7 @@
 package com.mtqp.test.service.impl;
 
 import com.mtqp.test.job.BidSyncJob;
-import com.mtqp.test.pool.QueuePool;
+import com.mtqp.test.distributor.QueueDistributor;
 import com.mtqp.test.service.ConverterService;
 import com.mtqp.test.service.BidSyncService;
 import org.slf4j.Logger;
@@ -16,23 +16,23 @@ import java.util.Date;
 public class BidSyncServiceImpl implements BidSyncService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(BidSyncJob.class);
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 	private final ConverterService converterService;
-	private final QueuePool queuePool;
+	private final QueueDistributor queueDistributor;
 
 	@Autowired
-	public BidSyncServiceImpl(ConverterService converterService, QueuePool queuePool) {
+	public BidSyncServiceImpl(ConverterService converterService, QueueDistributor queueDistributor) {
 
 		this.converterService = converterService;
-		this.queuePool = queuePool;
+		this.queueDistributor = queueDistributor;
 	}
 
 	@Override
 	public void synchronize() {
 
 		var bids = converterService.readJson();
-		LOGGER.info("Json has read at " + dateFormat.format(new Date()));
-		queuePool.compose(bids);
+		LOGGER.info("Bids have been synchronized at " + dateFormat.format(new Date()));
+		queueDistributor.compose(bids);
 	}
 }

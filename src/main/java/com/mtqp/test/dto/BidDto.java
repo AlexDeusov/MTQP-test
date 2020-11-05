@@ -42,13 +42,6 @@ public class BidDto {
 	}
 
 	@Override
-	public String toString() {
-
-		String decodedPl = new String(Base64.getDecoder().decode(payload));
-		return "{id=" + id + ", ts=" + timestamp + ", ty='" + type + ", pl='" + decodedPl + '}';
-	}
-
-	@Override
 	public boolean equals(Object o) {
 
 		if (this == o)
