@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Component
 public class QueuingThread extends Thread {
@@ -26,7 +27,7 @@ public class QueuingThread extends Thread {
 	public void addBid(BidDto dto, String type) {
 
 		if (!QUEUE_MAP.containsKey(type)) {
-			QUEUE_MAP.put(type, new LinkedList<>());
+			QUEUE_MAP.put(type, new LinkedBlockingQueue<>());
 		}
 		QUEUE_MAP.get(type).add(dto);
 		LOGGER.info("Bid with id " + dto.getId() + " has added to queue " + type);
